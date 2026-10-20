@@ -34,14 +34,27 @@ public sealed record AppShortcut(int Key, int Modifiers)
         shortcut = new(key, modifiers);
         return shortcut.IsValid;
     }
+    /// <summary>从物理主键和当前按下的键构造组合；左右修饰键等价，不接受单独修饰键。</summary>
+    /// <param name="key">主键的 Win32 虚拟键码。</param>
+    /// <param name="pressedKeys">当前按下的虚拟键码集合，用于读取修饰键。</param>
+    /// <param name="shortcut">捕获结果；返回 false 时不得用于覆盖已有快捷键。</param>
+    public static bool TryCapture(int key, IEnumerable<int> pressedKeys, out AppShortcut shortcut)
+    {
+        shortcut = new(key, GetModifiers(pressedKeys));
+        return shortcut.IsValid;
+    }
+
     /// <summary>按左右修饰键等价、修饰键组合精确匹配，避免多项快捷键同时触发。</summary>
     public bool Matches(int key, IEnumerable<int> pressedKeys)
+        => key == Key && GetModifiers(pressedKeys) == Modifiers;
+
+    /// <summary>将按下的左右修饰键统一转换为持久化使用的 MOD 标志。</summary>
+    private static int GetModifiers(IEnumerable<int> pressedKeys)
     {
-        if (key != Key) return false;
         var modifiers = 0;
         foreach (var pressed in pressedKeys)
             modifiers |= pressed switch { 0x12 or 0xA4 or 0xA5 => 1, 0x11 or 0xA2 or 0xA3 => 2, 0x10 or 0xA0 or 0xA1 => 4, 0x5B or 0x5C => 8, _ => 0 };
-        return modifiers == Modifiers;
+        return modifiers;
     }
     public override string ToString()
     {

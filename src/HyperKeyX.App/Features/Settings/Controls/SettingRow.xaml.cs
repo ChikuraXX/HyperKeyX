@@ -16,6 +16,18 @@ public sealed partial class SettingRow : UserControl
     private UiScaleMetrics? _subscribedScaleMetrics;
     private bool _isLoaded;
 
+    /// <summary>行内容内边距；展开项头部已经提供左侧留白时，可避免重复缩进。</summary>
+    public static readonly DependencyProperty RowPaddingProperty = DependencyProperty.Register(
+        nameof(RowPadding), typeof(Thickness), typeof(SettingRow),
+        new PropertyMetadata(new Thickness(16, 12, 16, 12)));
+
+    /// <summary>图标、说明和操作区域共用的内边距。</summary>
+    public Thickness RowPadding
+    {
+        get => (Thickness)GetValue(RowPaddingProperty);
+        set => SetValue(RowPaddingProperty, value);
+    }
+
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title),
         typeof(string),

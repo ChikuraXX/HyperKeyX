@@ -72,17 +72,17 @@ Building from source requires .NET SDK 10 and a Windows build environment.
 dotnet restore HyperKeyX.slnx
 dotnet build src/HyperKeyX.App/HyperKeyX.App.csproj -c Release -p:Platform=x64
 # Create a non-self-contained application ZIP; this does not publish it.
-./scripts/Build-Zip.ps1 -Version 1.0.0
+./scripts/Build-Zip.ps1 -Version 1.0.1
 # Preview example:
-./scripts/Build-Zip.ps1 -Version 1.0.1-preview.1 -OutputDirectory artifacts/zip-preview
+./scripts/Build-Zip.ps1 -Version 1.0.2-preview.1 -OutputDirectory artifacts/zip-preview
 ```
 
 The application archive and `SHA256SUMS.txt` are written to `artifacts/zip`. Extract the complete archive before launching; keep the adjacent assemblies, resources, and license files together. App settings and macros continue to use the existing local application data directory.
 
 | Channel | Source branch | Tag | GitHub Release |
 | --- | --- | --- | --- |
-| Stable | `master` | `v1.0.0` | Latest stable |
-| Preview | `test` | `v1.0.1-preview.1` | Pre-release; does not replace Latest |
+| Stable | `master` | `v1.0.1` | Latest stable |
+| Preview | `test` | `v1.0.2-preview.1` | Pre-release; does not replace Latest |
 
 The release workflow builds a ZIP, SHA-256 checksums, and a clean source archive. Publishing validates that the tag points to the build commit on the corresponding remote branch. Manual runs build candidates by default; publishing requires explicitly selecting the publish option and an existing matching tag.
 

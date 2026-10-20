@@ -87,33 +87,44 @@
             </controls:SettingRow>
         </Border>
 
-        <Border Style="{StaticResource SettingsRowContainerStyle}">
-            <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                <Expander.Resources><Thickness x:Key="ExpanderHeaderPadding">0</Thickness></Expander.Resources>
+        <Expander x:Name="ShortcutsExpander" CornerRadius="8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                 <Expander.Header>
                     <controls:SettingRow Title="{x:Bind ViewModel.ShortcutSettingsTitle, Mode=OneWay}"
                                          Description="{x:Bind ViewModel.ShortcutSettingsDescription, Mode=OneWay}"
-                                         Glyph="&#xE765;" ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}"/>
+                                         Glyph="&#xE765;" RowPadding="0,12,0,12" ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}"/>
                 </Expander.Header>
                 <StackPanel Padding="16" Spacing="12">
-                    <TextBox Header="{x:Bind ViewModel.ToggleShortcutLabel, Mode=OneWay}"
+                    <TextBox x:Name="ToggleShortcutCapture" Tag="ShortcutCapture" IsReadOnly="True"
+                             GotFocus="OnShortcutCaptureGotFocus" LostFocus="OnShortcutCaptureLostFocus"
+                             PreviewKeyDown="OnShortcutCaptureKeyDown"
+                             ToolTipService.ToolTip="{x:Bind ViewModel.ShortcutCaptureHint, Mode=OneWay}"
+                             AutomationProperties.HelpText="{x:Bind ViewModel.ShortcutCaptureHint, Mode=OneWay}"
+                             Header="{x:Bind ViewModel.ToggleShortcutLabel, Mode=OneWay}"
                              FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
                              Text="{x:Bind ViewModel.ToggleShortcutDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBox Header="{x:Bind ViewModel.RecordingShortcutLabel, Mode=OneWay}"
+                    <TextBox x:Name="RecordingShortcutCapture" Tag="ShortcutCapture" IsReadOnly="True"
+                             GotFocus="OnShortcutCaptureGotFocus" LostFocus="OnShortcutCaptureLostFocus"
+                             PreviewKeyDown="OnShortcutCaptureKeyDown"
+                             ToolTipService.ToolTip="{x:Bind ViewModel.ShortcutCaptureHint, Mode=OneWay}"
+                             AutomationProperties.HelpText="{x:Bind ViewModel.ShortcutCaptureHint, Mode=OneWay}"
+                             Header="{x:Bind ViewModel.RecordingShortcutLabel, Mode=OneWay}"
                              FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
                              Text="{x:Bind ViewModel.RecordingShortcutDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBox Header="{x:Bind ViewModel.EmergencyShortcutLabel, Mode=OneWay}"
+                    <TextBox x:Name="EmergencyShortcutCapture" Tag="ShortcutCapture" IsReadOnly="True"
+                             GotFocus="OnShortcutCaptureGotFocus" LostFocus="OnShortcutCaptureLostFocus"
+                             PreviewKeyDown="OnShortcutCaptureKeyDown"
+                             ToolTipService.ToolTip="{x:Bind ViewModel.ShortcutCaptureHint, Mode=OneWay}"
+                             AutomationProperties.HelpText="{x:Bind ViewModel.ShortcutCaptureHint, Mode=OneWay}"
+                             Header="{x:Bind ViewModel.EmergencyShortcutLabel, Mode=OneWay}"
                              FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
                              Text="{x:Bind ViewModel.EmergencyShortcutDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="{x:Bind ViewModel.SaveShortcutsText, Mode=OneWay}" Click="OnSaveShortcuts"
                             FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"/>
                 </StackPanel>
-            </Expander>
-        </Border>
+        </Expander>
 
         <!-- 每次进入通用设置异步刷新，展开状态独立保留。 -->
-        <Border Style="{StaticResource SettingsRowContainerStyle}">
-            <Expander x:Name="StorageExpander"
+        <Expander x:Name="StorageExpander" CornerRadius="8"
                       FontFamily="{ThemeResource ContentControlThemeFontFamily}"
                       FontWeight="Normal"
                       IsExpanded="{x:Bind ViewModel.IsStorageExpanded, Mode=TwoWay}"
@@ -121,7 +132,6 @@
                       HorizontalAlignment="Stretch"
                       HorizontalContentAlignment="Stretch">
                 <Expander.Resources>
-                    <Thickness x:Key="ExpanderHeaderPadding">0</Thickness>
                     <HorizontalAlignment x:Key="ExpanderHeaderHorizontalContentAlignment">Stretch</HorizontalAlignment>
                     <!-- 箭头列共占 36，与内容区右侧 16+16+4 的留白一致。 -->
                     <x:Double x:Key="ExpanderChevronButtonSize">32</x:Double>
@@ -129,7 +139,7 @@
                 </Expander.Resources>
                 <Expander.Header>
                     <Grid MinHeight="{x:Bind ViewModel.UiScaleMetrics.SettingsRowMinHeight, Mode=OneWay}"
-                          Padding="16,10,0,10"
+                          Padding="0,12,0,12"
                           ColumnDefinitions="Auto,*,Auto,Auto"
                           ColumnSpacing="14">
                         <FontIcon Grid.Column="0"
@@ -234,8 +244,7 @@
                         </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>
                 </Border>
-            </Expander>
-        </Border>
+        </Expander>
 
         <Border Style="{StaticResource SettingsRowContainerStyle}">
             <controls:SettingRow x:Name="NotificationsRow"

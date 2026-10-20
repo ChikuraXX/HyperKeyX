@@ -100,6 +100,7 @@ public sealed partial class MainWindow : Window
 
         ApplyAppearance();
         Closed += OnClosed;
+        Activated += OnWindowActivated;
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -129,6 +130,8 @@ public sealed partial class MainWindow : Window
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(SettingsViewModel.IsShortcutCaptureActive))
+            SynchronizeShortcutCapture();
         if (e.PropertyName == nameof(SettingsViewModel.TrayIconEnabled))
             SynchronizeTrayPreference();
 
@@ -150,7 +153,7 @@ public sealed partial class MainWindow : Window
 
     private void ToggleRuntimeFromShortcut()
     {
-        if (_closed)
+        if (_closed || _viewModel.Settings.IsShortcutCaptureActive)
             return;
 
         var wasRunning = _viewModel.IsOrchestratorRunning;
@@ -163,6 +166,25 @@ public sealed partial class MainWindow : Window
             _viewModel.ActiveRuntimeProfileName);
         if (notification is not null)
             ShowRuntimeNotification(notification);
+    }
+
+    /// <summary>窗口失活时恢复全局键，返回捕获框时再次暂停，避免后台遗留暂停状态。</summary>
+    private void OnWindowActivated(object sender, WindowActivatedEventArgs args) =>
+        _viewModel.Settings.IsShortcutCaptureActive = args.WindowActivationState != WindowActivationState.Deactivated &&
+            WindowRoot.IsLoaded && WindowRoot.XamlRoot is { } xamlRoot &&
+            Microsoft.UI.Xaml.Input.FocusManager.GetFocusedElement(xamlRoot) is TextBox { Tag: "ShortcutCapture" };
+
+    /// <summary>捕获期间释放系统注册，使原快捷键也能作为普通按键送达捕获框。</summary>
+    private void SynchronizeShortcutCapture()
+    {
+        if (_closed || !_shellServicesInitialized) return;
+        if (_viewModel.Settings.IsShortcutCaptureActive)
+        {
+            _globalShortcut.Unregister();
+            return;
+        }
+        var result = _globalShortcut.Register(_windowHandle, [ToggleRuntimeShortcut]);
+        if (!result.Succeeded) ShowShortcutError(result);
     }
 
     private void EnsureLocalNotificationsInitialized()
@@ -230,11 +252,7 @@ public sealed partial class MainWindow : Window
             return;
 
         _shellServicesInitialized = true;
-        var shortcutResult = _globalShortcut.Register(
-            _windowHandle,
-            [ToggleRuntimeShortcut]);
-        if (!shortcutResult.Succeeded)
-            ShowShortcutError(shortcutResult);
+        SynchronizeShortcutCapture();
 
         if (_viewModel.Settings.RuntimeStatusNotificationsEnabled)
             EnsureLocalNotificationsInitialized();
@@ -599,6 +617,7 @@ public sealed partial class MainWindow : Window
 
         _closed = true;
         Closed -= OnClosed;
+        Activated -= OnWindowActivated;
         _appWindow.Closing -= OnAppWindowClosing;
         _trayIcon.CommandInvoked -= OnTrayCommandInvoked;
         _globalShortcut.ShortcutInvoked -= OnGlobalShortcutInvoked;

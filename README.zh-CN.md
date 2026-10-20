@@ -72,17 +72,17 @@ HyperKeyX 是一款 Windows 键盘与鼠标宏工具，将按键连发、可复�
 dotnet restore HyperKeyX.slnx
 dotnet build src/HyperKeyX.App/HyperKeyX.App.csproj -c Release -p:Platform=x64
 # 生成非自包含程序 ZIP，不执行发布。
-./scripts/Build-Zip.ps1 -Version 1.0.0
+./scripts/Build-Zip.ps1 -Version 1.0.1
 # 预览版示例：
-./scripts/Build-Zip.ps1 -Version 1.0.1-preview.1 -OutputDirectory artifacts/zip-preview
+./scripts/Build-Zip.ps1 -Version 1.0.2-preview.1 -OutputDirectory artifacts/zip-preview
 ```
 
 程序压缩包和 `SHA256SUMS.txt` 输出到 `artifacts/zip`。请完整解压后启动，保留同目录中的程序集、资源及协议文件。软件设置和宏继续使用原有的本地应用数据目录。
 
 | 通道 | 源码分支 | 标签示例 | GitHub Release |
 | --- | --- | --- | --- |
-| 稳定版 | `master` | `v1.0.0` | 最新稳定版 |
-| 预览版 | `test` | `v1.0.1-preview.1` | Pre-release，不覆盖 Latest |
+| 稳定版 | `master` | `v1.0.1` | 最新稳定版 |
+| 预览版 | `test` | `v1.0.2-preview.1` | Pre-release，不覆盖 Latest |
 
 发布工作流生成 ZIP、SHA-256 校验清单和干净源码压缩包。发布时会核对标签精确指向当前构建提交，且提交属于对应远程分支。手动运行默认只生成候选产物；只有明确开启发布选项且已有匹配标签，才会发布。
 

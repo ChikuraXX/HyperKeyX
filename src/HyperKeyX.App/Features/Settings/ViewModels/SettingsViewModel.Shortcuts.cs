@@ -10,12 +10,16 @@ public sealed partial class SettingsViewModel
     [ObservableProperty] private string _toggleShortcutDraft = string.Empty;
     [ObservableProperty] private string _recordingShortcutDraft = string.Empty;
     [ObservableProperty] private string _emergencyShortcutDraft = string.Empty;
+    /// <summary>仅在快捷键捕获框具有活动窗口焦点时暂停全局启停热键。</summary>
+    [ObservableProperty] private bool _isShortcutCaptureActive;
     public string ShortcutSettingsTitle => Localize("快捷键", "Keyboard shortcuts");
     public string ShortcutSettingsDescription => Localize("保存后重启应用生效", "Restart the app after saving to apply");
     public string ToggleShortcutLabel => Localize("启动／停止运行", "Start / stop automation");
     public string RecordingShortcutLabel => Localize("完成录制", "Finish recording");
     public string EmergencyShortcutLabel => Localize("紧急停止", "Emergency stop");
     public string SaveShortcutsText => Localize("保存快捷键", "Save shortcuts");
+    /// <summary>捕获框的键盘操作提示，同时提供给辅助技术。</summary>
+    public string ShortcutCaptureHint => Localize("点击后按下快捷键组合", "Click, then press a shortcut combination");
 
     private void InitializeShortcutDraft()
     {
@@ -48,7 +52,8 @@ public sealed partial class SettingsViewModel
     private void RaiseShortcutLocalizationChanged()
     {
         foreach (var name in new[] { nameof(ShortcutSettingsTitle), nameof(ShortcutSettingsDescription),
-            nameof(ToggleShortcutLabel), nameof(RecordingShortcutLabel), nameof(EmergencyShortcutLabel), nameof(SaveShortcutsText) })
+            nameof(ToggleShortcutLabel), nameof(RecordingShortcutLabel), nameof(EmergencyShortcutLabel), nameof(SaveShortcutsText),
+            nameof(ShortcutCaptureHint) })
             OnPropertyChanged(name);
     }
 }
