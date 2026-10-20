@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="src/HyperKeyX.Domain/HyperKeyX.Domain.csproj" />
+  <Project Path="src/HyperKeyX.Application/HyperKeyX.Application.csproj" />
+  <Project Path="src/HyperKeyX.Infrastructure/HyperKeyX.Infrastructure.csproj" />
+  <Project Path="src/HyperKeyX.App/HyperKeyX.App.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+    <Deploy />
+  </Project>
+</Solution>

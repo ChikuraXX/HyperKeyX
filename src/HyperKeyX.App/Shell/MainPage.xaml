@@ -1,0 +1,146 @@
+<Page
+    x:Class="HyperKeyX.Shell.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:motion="using:HyperKeyX.Shell.Appearance">
+
+    <Grid x:Name="AppearanceRoot" Background="Transparent">
+        <Image x:Name="CustomBackgroundImage"
+               Stretch="UniformToFill"
+               IsHitTestVisible="False"
+               Visibility="Collapsed"
+               ImageFailed="OnCustomBackgroundImageFailed"/>
+        <Border x:Name="BackgroundOverlay"
+                Background="Transparent"
+                IsHitTestVisible="False"/>
+
+        <NavigationView x:Name="RootNavigation"
+                    Background="Transparent"
+                    PaneDisplayMode="Left"
+                    IsPaneOpen="True"
+                    OpenPaneLength="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationOpenPaneLength, Mode=OneWay}"
+                    CompactPaneLength="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationCompactPaneLength, Mode=OneWay}"
+                    IsPaneToggleButtonVisible="True"
+                    IsBackButtonVisible="Collapsed"
+                    IsSettingsVisible="False"
+                    SizeChanged="OnMainPageSizeChanged"
+                    PaneOpened="OnNavigationPaneOpened"
+                    PaneClosed="OnNavigationPaneClosed"
+                    ItemInvoked="OnNavigationItemInvoked">
+        <NavigationView.MenuItems>
+            <NavigationViewItem x:Name="KeyboardNavigationItem"
+                                MinHeight="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemHeight, Mode=OneWay}"
+                                Margin="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemMargin, Mode=OneWay}"
+                                FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                Tag="keyboard"
+                                Content="{x:Bind ViewModel.KeyboardNavigationText, Mode=OneWay}"
+                                AutomationProperties.Name="{x:Bind ViewModel.KeyboardNavigationText, Mode=OneWay}"
+                                ToolTipService.ToolTip="{x:Bind ViewModel.KeyboardNavigationText, Mode=OneWay}">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE765;"
+                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"/>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItem x:Name="MouseNavigationItem"
+                                MinHeight="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemHeight, Mode=OneWay}"
+                                Margin="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemMargin, Mode=OneWay}"
+                                FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                Tag="mouse"
+                                Content="{x:Bind ViewModel.MouseNavigationText, Mode=OneWay}"
+                                AutomationProperties.Name="{x:Bind ViewModel.MouseNavigationText, Mode=OneWay}"
+                                ToolTipService.ToolTip="{x:Bind ViewModel.MouseNavigationText, Mode=OneWay}">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE962;"
+                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"/>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItemSeparator/>
+            <NavigationViewItem x:Name="MacrosNavigationItem"
+                                MinHeight="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemHeight, Mode=OneWay}"
+                                Margin="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemMargin, Mode=OneWay}"
+                                FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                Tag="macros"
+                                Content="{x:Bind ViewModel.MacrosNavigationText, Mode=OneWay}"
+                                AutomationProperties.Name="{x:Bind ViewModel.MacrosNavigationText, Mode=OneWay}"
+                                ToolTipService.ToolTip="{x:Bind ViewModel.MacrosNavigationText, Mode=OneWay}">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE8D4;"
+                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"/>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItem x:Name="ProfilesNavigationItem"
+                                MinHeight="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemHeight, Mode=OneWay}"
+                                Margin="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemMargin, Mode=OneWay}"
+                                FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                Tag="profiles"
+                                Content="{x:Bind ViewModel.ProfilesText, Mode=OneWay}"
+                                AutomationProperties.Name="{x:Bind ViewModel.ProfilesText, Mode=OneWay}"
+                                ToolTipService.ToolTip="{x:Bind ViewModel.ProfilesText, Mode=OneWay}">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE8A5;"
+                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"/>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+        </NavigationView.MenuItems>
+
+        <NavigationView.FooterMenuItems>
+            <NavigationViewItem Tag="run"
+                                MinHeight="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemHeight, Mode=OneWay}"
+                                Margin="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemMargin, Mode=OneWay}"
+                                FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                SelectsOnInvoked="False"
+                                Content="{x:Bind ViewModel.RunButtonText, Mode=OneWay}"
+                                AutomationProperties.Name="{x:Bind ViewModel.RunButtonText, Mode=OneWay}"
+                                ToolTipService.ToolTip="{x:Bind ViewModel.RunButtonText, Mode=OneWay}">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="{x:Bind ViewModel.RunIconGlyph, Mode=OneWay}"
+                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"/>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItemSeparator/>
+            <NavigationViewItem x:Name="SettingsNavigationItem"
+                                MinHeight="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemHeight, Mode=OneWay}"
+                                Margin="{x:Bind ViewModel.Settings.UiScaleMetrics.NavigationItemMargin, Mode=OneWay}"
+                                FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                Tag="settings"
+                                Content="{x:Bind ViewModel.SettingsTitleText, Mode=OneWay}"
+                                AutomationProperties.Name="{x:Bind ViewModel.SettingsTooltipText, Mode=OneWay}"
+                                ToolTipService.ToolTip="{x:Bind ViewModel.SettingsTooltipText, Mode=OneWay}">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE713;"
+                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"/>
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+        </NavigationView.FooterMenuItems>
+
+        <Grid x:Name="PageContentHost" Background="Transparent" motion:ContentMotion.Context="{x:Bind ViewModel.Navigation.ActiveSection, Mode=OneWay}">
+            <ContentControl x:Name="KeyboardHost"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.Navigation.IsKeyboardActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+            <ContentControl x:Name="MouseHost"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.Navigation.IsMouseActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+            <ContentControl x:Name="MacroLibraryHost"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.Navigation.IsMacrosActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+            <ContentControl x:Name="ProfilesHost"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.Navigation.IsProfilesActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+            <ContentControl x:Name="SettingsHost"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.Navigation.IsSettingsActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+        </Grid>
+        </NavigationView>
+    </Grid>
+</Page>

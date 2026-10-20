@@ -1,0 +1,144 @@
+<UserControl
+    x:Class="HyperKeyX.Features.Mouse.Controls.MouseButtonSelectorControl"
+    x:Name="MouseButtonSelectorRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:HyperKeyX.Features.Mouse.ViewModels">
+
+    <UserControl.Resources>
+        <Style x:Key="MouseButtonSelectorStyle" TargetType="Button">
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="-2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="Root">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="InteractionOverlay.Opacity" Value="0.08"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="InteractionOverlay.Opacity" Value="0.14"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.Opacity" Value="0.45"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <!-- 绑定的选中与连发底色始终保留，悬浮仅叠加轻量反馈。 -->
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"/>
+                            <Border x:Name="InteractionOverlay"
+                                    Background="{ThemeResource TextFillColorPrimaryBrush}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    IsHitTestVisible="False"
+                                    Opacity="0"/>
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              Padding="{TemplateBinding Padding}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Padding="16"
+            BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="1"
+            CornerRadius="4">
+        <Grid RowDefinitions="Auto,Auto"
+              RowSpacing="{x:Bind ViewModel.Settings.UiScaleMetrics.SectionSpacing, Mode=OneWay}">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Grid.Column="0"
+                           Text="{x:Bind ViewModel.MouseNavigationText, Mode=OneWay}"
+                           FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.SectionFontSize, Mode=OneWay}"
+                           FontWeight="Normal"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1"
+                           Text="{x:Bind ViewModel.SelectedMouseButton.TriggerDisplayName, Mode=OneWay}"
+                           FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.CaptionFontSize, Mode=OneWay}"
+                           Opacity="0.65"
+                           TextTrimming="CharacterEllipsis"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+            <ContentControl Grid.Row="1"
+                            IsEnabled="{x:Bind ViewModel.CanEditTriggerConfiguration, Mode=OneWay}"
+                            HorizontalContentAlignment="Stretch">
+            <ItemsRepeater x:Name="MouseButtonRepeater"
+                           ItemsSource="{x:Bind ViewModel.MouseButtons, Mode=OneWay}"
+                           HorizontalAlignment="Stretch">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout Orientation="Horizontal"
+                                       MaximumRowsOrColumns="5"
+                                       MinItemWidth="{x:Bind ViewModel.Settings.UiScaleMetrics.MouseSelectorMinWidth, Mode=OneWay}"
+                                       MinItemHeight="{x:Bind ViewModel.Settings.UiScaleMetrics.MouseSelectorHeight, Mode=OneWay}"
+                                       MinColumnSpacing="{x:Bind ViewModel.Settings.UiScaleMetrics.SectionSpacing, Mode=OneWay}"
+                                       MinRowSpacing="{x:Bind ViewModel.Settings.UiScaleMetrics.SectionSpacing, Mode=OneWay}"
+                                       ItemsJustification="Start"
+                                       ItemsStretch="Fill"/>
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MouseButtonStateViewModel">
+                        <Button FontSize="{Binding ElementName=MouseButtonSelectorRoot, Path=ViewModel.Settings.UiScaleMetrics.BodyFontSize}" Style="{StaticResource MouseButtonSelectorStyle}"
+                                Background="{x:Bind BackgroundBrush, Mode=OneWay}"
+                                BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
+                                BorderThickness="{x:Bind BorderThickness, Mode=OneWay}"
+                                Click="OnMouseButtonClick"
+                                Tag="{x:Bind}"
+                                AutomationProperties.Name="{x:Bind AutomationName, Mode=OneWay}"
+                                ToolTipService.ToolTip="{x:Bind ToolTipText, Mode=OneWay}">
+                            <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                                <Grid Grid.Row="0" Height="{Binding ElementName=MouseButtonSelectorRoot, Path=ViewModel.Settings.UiScaleMetrics.SmallIconButtonSize}">
+                                    <FontIcon Glyph="&#xE962;"
+                                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                              FontSize="{Binding ElementName=MouseButtonSelectorRoot, Path=ViewModel.Settings.UiScaleMetrics.LargeIconGlyphSize}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    <FontIcon Glyph="&#xE73E;"
+                                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                              FontSize="{Binding ElementName=MouseButtonSelectorRoot, Path=ViewModel.Settings.UiScaleMetrics.SmallCaptionFontSize}"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Top"
+                                              Visibility="{x:Bind IsSelected, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                                </Grid>
+                                <TextBlock Grid.Row="1"
+                                           Text="{x:Bind DisplayName, Mode=OneWay}"
+                                           FontSize="{Binding ElementName=MouseButtonSelectorRoot, Path=ViewModel.Settings.UiScaleMetrics.CompactBodyFontSize}"
+                                           FontWeight="Normal"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           MaxLines="2"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+            </ContentControl>
+        </Grid>
+    </Border>
+</UserControl>

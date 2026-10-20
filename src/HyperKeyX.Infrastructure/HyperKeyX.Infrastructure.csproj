@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <RootNamespace>HyperKeyX.Infrastructure</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HyperKeyX.Domain\HyperKeyX.Domain.csproj" />
+    <ProjectReference Include="..\HyperKeyX.Application\HyperKeyX.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Updates\InstallMsiUpdate.ps1" />
+  </ItemGroup>
+</Project>

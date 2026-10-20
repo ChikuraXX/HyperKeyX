@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "HyperKeyX (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "HyperKeyX (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

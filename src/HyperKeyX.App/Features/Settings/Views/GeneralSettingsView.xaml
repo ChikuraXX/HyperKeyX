@@ -1,0 +1,260 @@
+<UserControl
+    x:Class="HyperKeyX.Features.Settings.Views.GeneralSettingsView"
+    x:Name="GeneralSettingsRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:HyperKeyX.Features.Settings.Controls"
+    xmlns:vm="using:HyperKeyX.Features.Settings.ViewModels">
+
+    <StackPanel Spacing="8">
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <controls:SettingRow Title="{x:Bind ViewModel.StartWithWindowsText, Mode=OneWay}"
+                                 Description="{x:Bind ViewModel.StartWithWindowsDescriptionText, Mode=OneWay}"
+                                 Glyph="&#xE7E8;"
+                                 ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}">
+                <controls:SettingRow.ActionContent>
+                    <ToggleSwitch Height="{x:Bind ViewModel.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" x:Name="StartWithWindowsToggle"
+                                  AutomationProperties.Name="{x:Bind ViewModel.StartWithWindowsText, Mode=OneWay}"
+                                  OnContent="{x:Bind ViewModel.ToggleOnText, Mode=OneWay}"
+                                  OffContent="{x:Bind ViewModel.ToggleOffText, Mode=OneWay}"
+                                  IsOn="{x:Bind ViewModel.StartWithWindows, Mode=OneWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsLifecycleOperationIdle, Mode=OneWay}"
+                                  Toggled="OnStartWithWindowsToggled"/>
+                </controls:SettingRow.ActionContent>
+            </controls:SettingRow>
+        </Border>
+
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <controls:SettingRow Title="{x:Bind ViewModel.TrayIconText, Mode=OneWay}"
+                                 Description="{x:Bind ViewModel.TrayIconDescriptionText, Mode=OneWay}"
+                                 Glyph="&#xE8BB;"
+                                 ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}">
+                <controls:SettingRow.ActionContent>
+                    <ToggleSwitch Height="{x:Bind ViewModel.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" x:Name="TrayIconToggle"
+                                  AutomationProperties.Name="{x:Bind ViewModel.TrayIconText, Mode=OneWay}"
+                                  OnContent="{x:Bind ViewModel.ToggleOnText, Mode=OneWay}"
+                                  OffContent="{x:Bind ViewModel.ToggleOffText, Mode=OneWay}"
+                                  IsOn="{x:Bind ViewModel.TrayIconEnabled, Mode=OneWay}"
+                                  IsEnabled="{x:Bind ViewModel.IsLifecycleOperationIdle, Mode=OneWay}"
+                                  Toggled="OnTrayIconToggled"/>
+                </controls:SettingRow.ActionContent>
+            </controls:SettingRow>
+        </Border>
+
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <controls:SettingRow Title="{x:Bind ViewModel.StartMinimizedToTrayText, Mode=OneWay}"
+                                 Description="{x:Bind ViewModel.StartMinimizedToTrayDescriptionText, Mode=OneWay}"
+                                 Glyph="&#xE921;"
+                                 ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}">
+                <controls:SettingRow.ActionContent>
+                    <ToggleSwitch Height="{x:Bind ViewModel.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" x:Name="StartMinimizedToTrayToggle"
+                                  AutomationProperties.Name="{x:Bind ViewModel.StartMinimizedToTrayText, Mode=OneWay}"
+                                  OnContent="{x:Bind ViewModel.ToggleOnText, Mode=OneWay}"
+                                  OffContent="{x:Bind ViewModel.ToggleOffText, Mode=OneWay}"
+                                  IsOn="{x:Bind ViewModel.StartMinimizedToTray, Mode=OneWay}"
+                                  IsEnabled="{x:Bind ViewModel.CanStartMinimizedToTray, Mode=OneWay}"
+                                  Toggled="OnStartMinimizedToTrayToggled"/>
+                </controls:SettingRow.ActionContent>
+            </controls:SettingRow>
+        </Border>
+
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <controls:SettingRow Title="{x:Bind ViewModel.RuntimeStatusNotificationsText, Mode=OneWay}"
+                                 Description="{x:Bind ViewModel.RuntimeStatusNotificationsDescriptionText, Mode=OneWay}"
+                                 Glyph="&#xE7F4;"
+                                 ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}">
+                <controls:SettingRow.ActionContent>
+                    <ToggleSwitch Height="{x:Bind ViewModel.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" x:Name="RuntimeStatusNotificationsToggle"
+                                  AutomationProperties.Name="{x:Bind ViewModel.RuntimeStatusNotificationsText, Mode=OneWay}"
+                                  OnContent="{x:Bind ViewModel.ToggleOnText, Mode=OneWay}"
+                                  OffContent="{x:Bind ViewModel.ToggleOffText, Mode=OneWay}"
+                                  IsOn="{x:Bind ViewModel.RuntimeStatusNotificationsEnabled, Mode=OneWay}"
+                                  Toggled="OnRuntimeStatusNotificationsToggled"/>
+                </controls:SettingRow.ActionContent>
+            </controls:SettingRow>
+        </Border>
+
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <controls:SettingRow Title="{x:Bind ViewModel.DefaultStartupPageText, Mode=OneWay}"
+                                 Description="{x:Bind ViewModel.DefaultStartupPageDescriptionText, Mode=OneWay}"
+                                 Glyph="&#xE8A7;"
+                                 ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}">
+                <controls:SettingRow.ActionContent>
+                    <ComboBox FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" MaxWidth="{x:Bind ViewModel.UiScaleMetrics.SettingsActionWidth, Mode=OneWay}" HorizontalAlignment="Stretch"
+                              ItemsSource="{x:Bind ViewModel.StartupPageOptions, Mode=OneWay}"
+                              SelectedIndex="{x:Bind ViewModel.SelectedStartupPageIndex, Mode=TwoWay}"/>
+                </controls:SettingRow.ActionContent>
+            </controls:SettingRow>
+        </Border>
+
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <Expander.Resources><Thickness x:Key="ExpanderHeaderPadding">0</Thickness></Expander.Resources>
+                <Expander.Header>
+                    <controls:SettingRow Title="{x:Bind ViewModel.ShortcutSettingsTitle, Mode=OneWay}"
+                                         Description="{x:Bind ViewModel.ShortcutSettingsDescription, Mode=OneWay}"
+                                         Glyph="&#xE765;" ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}"/>
+                </Expander.Header>
+                <StackPanel Padding="16" Spacing="12">
+                    <TextBox Header="{x:Bind ViewModel.ToggleShortcutLabel, Mode=OneWay}"
+                             FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                             Text="{x:Bind ViewModel.ToggleShortcutDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Header="{x:Bind ViewModel.RecordingShortcutLabel, Mode=OneWay}"
+                             FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                             Text="{x:Bind ViewModel.RecordingShortcutDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Header="{x:Bind ViewModel.EmergencyShortcutLabel, Mode=OneWay}"
+                             FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                             Text="{x:Bind ViewModel.EmergencyShortcutDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="{x:Bind ViewModel.SaveShortcutsText, Mode=OneWay}" Click="OnSaveShortcuts"
+                            FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"/>
+                </StackPanel>
+            </Expander>
+        </Border>
+
+        <!-- 每次进入通用设置异步刷新，展开状态独立保留。 -->
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <Expander x:Name="StorageExpander"
+                      FontFamily="{ThemeResource ContentControlThemeFontFamily}"
+                      FontWeight="Normal"
+                      IsExpanded="{x:Bind ViewModel.IsStorageExpanded, Mode=TwoWay}"
+                      Expanding="OnStorageExpanding"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch">
+                <Expander.Resources>
+                    <Thickness x:Key="ExpanderHeaderPadding">0</Thickness>
+                    <HorizontalAlignment x:Key="ExpanderHeaderHorizontalContentAlignment">Stretch</HorizontalAlignment>
+                    <!-- 箭头列共占 36，与内容区右侧 16+16+4 的留白一致。 -->
+                    <x:Double x:Key="ExpanderChevronButtonSize">32</x:Double>
+                    <Thickness x:Key="ExpanderChevronMargin">0,0,4,0</Thickness>
+                </Expander.Resources>
+                <Expander.Header>
+                    <Grid MinHeight="{x:Bind ViewModel.UiScaleMetrics.SettingsRowMinHeight, Mode=OneWay}"
+                          Padding="16,10,0,10"
+                          ColumnDefinitions="Auto,*,Auto,Auto"
+                          ColumnSpacing="14">
+                        <FontIcon Grid.Column="0"
+                                  Glyph="&#xE8B7;"
+                                  FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                  FontSize="{x:Bind ViewModel.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"
+                                  Width="{x:Bind ViewModel.UiScaleMetrics.SmallIconButtonSize, Mode=OneWay}"
+                                  VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind ViewModel.StorageText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Text="{x:Bind ViewModel.StorageDescriptionText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.UiScaleMetrics.CaptionFontSize, Mode=OneWay}"
+                                       Opacity="0.65"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <ProgressRing Grid.Column="2"
+                                      Width="20"
+                                      Height="20"
+                                      IsActive="{x:Bind ViewModel.IsStorageRefreshing, Mode=OneWay}"
+                                      Visibility="{x:Bind ViewModel.IsStorageRefreshing, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                        <StackPanel Grid.Column="3"
+                                    Orientation="Horizontal"
+                                    Spacing="12"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind ViewModel.StorageTotalSizeText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.UiScaleMetrics.CaptionFontSize, Mode=OneWay}"
+                                       Opacity="0.75"
+                                       VerticalAlignment="Center"/>
+                            <Button FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" x:Name="RefreshStorageButton"
+                                    Width="{x:Bind ViewModel.UiScaleMetrics.CompactActionButtonSize, Mode=OneWay}"
+                                    Height="{x:Bind ViewModel.UiScaleMetrics.CompactActionButtonSize, Mode=OneWay}"
+                                    Style="{StaticResource CompactIconButtonStyle}"
+                                    Click="OnRefreshStorage"
+                                    AutomationProperties.Name="{x:Bind ViewModel.RefreshStorageText, Mode=OneWay}"
+                                    ToolTipService.ToolTip="{x:Bind ViewModel.RefreshStorageText, Mode=OneWay}">
+                                <FontIcon Glyph="&#xE72C;"
+                                          FontSize="{x:Bind ViewModel.UiScaleMetrics.IconGlyphSize, Mode=OneWay}"
+                                          Style="{StaticResource CommandFontIconStyle}"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Expander.Header>
+
+                <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                        BorderThickness="0,1,0,0"
+                        Padding="16,4,16,8">
+                    <ItemsRepeater x:Name="StorageAreaRepeater"
+                                   ItemsSource="{x:Bind ViewModel.StorageAreas, Mode=OneWay}">
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="vm:StorageAreaViewModel">
+                                <Border BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="4,10">
+                                    <Grid MinHeight="52"
+                                          ColumnDefinitions="Auto,*,Auto,Auto"
+                                          ColumnSpacing="12">
+                                        <Grid Grid.Column="0" Width="28" Height="28" VerticalAlignment="Center">
+                                            <FontIcon Glyph="{x:Bind Glyph, Mode=OneWay}"
+                                                      FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                      FontSize="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.SectionFontSize}"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind Title, Mode=OneWay}"
+                                                       FontSize="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.BodyFontSize}"
+                                                       FontWeight="Normal"
+                                                       TextWrapping="Wrap"/>
+                                            <TextBlock Text="{x:Bind Description, Mode=OneWay}"
+                                                       FontSize="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.CaptionFontSize}"
+                                                       Opacity="0.65"
+                                                       TextWrapping="Wrap"/>
+                                            <TextBlock Text="{x:Bind Path, Mode=OneWay}"
+                                                       FontSize="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.SmallCaptionFontSize}"
+                                                       Opacity="0.5"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{x:Bind SizeText, Mode=OneWay}"
+                                                   FontSize="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.CaptionFontSize}"
+                                                   Opacity="0.75"
+                                                   VerticalAlignment="Center"/>
+                                        <Button FontSize="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.BodyFontSize}" x:Name="OpenStorageButton"
+                                                Grid.Column="3"
+                                                Width="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.CompactActionButtonSize}"
+                                                Height="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.CompactActionButtonSize}"
+                                                Style="{StaticResource CompactIconButtonStyle}"
+                                                IsEnabled="{x:Bind CanOpen, Mode=OneWay}"
+                                                Click="OnOpenStorage"
+                                                AutomationProperties.Name="{x:Bind OpenButtonText, Mode=OneWay}"
+                                                ToolTipService.ToolTip="{x:Bind OpenButtonText, Mode=OneWay}">
+                                            <FontIcon Glyph="&#xE838;"
+                                                      FontSize="{Binding ElementName=GeneralSettingsRoot, Path=ViewModel.UiScaleMetrics.BodyFontSize}"
+                                                      Style="{StaticResource CommandFontIconStyle}"/>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </Border>
+            </Expander>
+        </Border>
+
+        <Border Style="{StaticResource SettingsRowContainerStyle}">
+            <controls:SettingRow x:Name="NotificationsRow"
+                                 Title="{x:Bind ViewModel.NotificationsFeature.Title, Mode=OneWay}"
+                                 Description="{x:Bind ViewModel.NotificationsFeature.Description, Mode=OneWay}"
+                                 Glyph="{x:Bind ViewModel.NotificationsFeature.Glyph, Mode=OneWay}"
+                                 ScaleMetrics="{x:Bind ViewModel.UiScaleMetrics, Mode=OneWay}">
+                <controls:SettingRow.ActionContent>
+                    <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="12">
+                        <TextBlock FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="0"
+                                   Text="{x:Bind ViewModel.NotificationsFeature.AvailabilityText, Mode=OneWay}"
+                                   Opacity="0.65"
+                                   VerticalAlignment="Center"/>
+                        <ToggleSwitch Height="{x:Bind ViewModel.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1" IsEnabled="False" IsOn="False"
+                                      OnContent="{x:Bind ViewModel.ToggleOnText, Mode=OneWay}"
+                                      OffContent="{x:Bind ViewModel.ToggleOffText, Mode=OneWay}"/>
+                    </Grid>
+                </controls:SettingRow.ActionContent>
+            </controls:SettingRow>
+        </Border>
+    </StackPanel>
+</UserControl>

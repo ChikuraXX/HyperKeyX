@@ -1,0 +1,32 @@
+# Visual Studio and user state
+.vs/
+.wix/
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET build and test output
+**/bin/
+**/obj/
+TestResults/
+artifacts/
+publish/
+*.trx
+*.coverage
+*.coveragexml
+*.log
+
+# Local agent and analysis artifacts
+.superpowers/
+graphify-out/
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# MSI installer and its tooling are retained locally only
+/installer/
+/scripts/Build-Msi.ps1
+/.config/dotnet-tools.json

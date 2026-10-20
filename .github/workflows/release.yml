@@ -1,0 +1,181 @@
+name: Build and release ZIP
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Semantic version (for example 1.0.0 or 1.0.1-preview.1)
+        required: true
+        default: 1.0.0
+        type: string
+      publish:
+        description: Publish an existing matching tag after building
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Validate and build
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      prerelease: ${{ steps.release.outputs.prerelease }}
+      should_publish: ${{ steps.release.outputs.should_publish }}
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Validate version, tag, and release branch
+        id: release
+        shell: pwsh
+        env:
+          DISPATCH_VERSION: ${{ inputs.version }}
+          DISPATCH_PUBLISH: ${{ inputs.publish }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $eventIsTagPush = $env:GITHUB_EVENT_NAME -eq 'push'
+          $publishRequested = $eventIsTagPush -or $env:DISPATCH_PUBLISH -eq 'true'
+
+          if ($eventIsTagPush) {
+            $tag = $env:GITHUB_REF_NAME
+            $version = $tag.Substring(1)
+          }
+          else {
+            $version = $env:DISPATCH_VERSION
+            $tag = "v$version"
+          }
+
+          $versionPattern = '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-preview\.(0|[1-9]\d*))?$'
+          if ($version -cnotmatch $versionPattern) {
+            throw "版本必须是 X.Y.Z 或 X.Y.Z-preview.N，且数字不能有前导零：$version"
+          }
+
+          if ($version -notlike '*-preview.*') {
+            $releaseBranch = 'master'
+            $prerelease = 'false'
+          }
+          else {
+            $releaseBranch = 'test'
+            $prerelease = 'true'
+          }
+
+          if ($eventIsTagPush -and $tag -ne "v$version") {
+            throw "标签与版本不一致：$tag"
+          }
+
+          if ($publishRequested) {
+            git fetch --no-tags origin "+refs/heads/$releaseBranch`:refs/remotes/origin/$releaseBranch"
+            if ($LASTEXITCODE -ne 0) {
+              throw "无法获取 origin/$releaseBranch。"
+            }
+
+            $headCommit = git rev-parse HEAD
+            if ($LASTEXITCODE -ne 0) {
+              throw '无法解析当前提交。'
+            }
+
+            $tagCommit = git rev-parse "refs/tags/$tag`^{commit}" 2>$null
+            if ($LASTEXITCODE -ne 0 -or $tagCommit -ne $headCommit) {
+              throw "发布标签 $tag 必须存在并准确指向当前提交 $headCommit。"
+            }
+
+            git merge-base --is-ancestor $headCommit "refs/remotes/origin/$releaseBranch"
+            if ($LASTEXITCODE -ne 0) {
+              throw "标签目标提交不属于 origin/$releaseBranch，已拒绝发布。"
+            }
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "prerelease=$prerelease" >> $env:GITHUB_OUTPUT
+          "should_publish=$($publishRequested.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build ZIP and export publish source
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $outputRoot = Join-Path $PWD 'artifacts/publishing'
+          & ./scripts/Build-Zip.ps1 -Version $env:RELEASE_VERSION -OutputDirectory $outputRoot
+          & ./scripts/Export-PublishSource.ps1 -OutputDirectory (Join-Path $outputRoot "publish-source-$env:RELEASE_VERSION")
+
+      - name: Upload release candidates
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: HyperKeyX-${{ steps.release.outputs.version }}-release-candidates
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            artifacts/publishing/HyperKeyX-${{ steps.release.outputs.version }}-win-x64.zip
+            artifacts/publishing/SHA256SUMS.txt
+            artifacts/publishing/publish-source-${{ steps.release.outputs.version }}.zip
+            artifacts/publishing/publish-source-${{ steps.release.outputs.version }}/publish-source.manifest.json
+
+  publish:
+    name: Publish GitHub release
+    needs: build
+    if: needs.build.outputs.should_publish == 'true'
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download validated release candidates
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: HyperKeyX-${{ needs.build.outputs.version }}-release-candidates
+          path: release-candidates
+
+      - name: Create release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.build.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
+          IS_PRERELEASE: ${{ needs.build.outputs.prerelease }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $zip = Join-Path $PWD "release-candidates/HyperKeyX-$env:RELEASE_VERSION-win-x64.zip"
+          $checksums = Join-Path $PWD 'release-candidates/SHA256SUMS.txt'
+          $sourceArchive = Join-Path $PWD "release-candidates/publish-source-$env:RELEASE_VERSION.zip"
+          $manifest = Join-Path $PWD "release-candidates/publish-source-$env:RELEASE_VERSION/publish-source.manifest.json"
+          $releaseArguments = @(
+            'release', 'create', $env:RELEASE_TAG,
+            $zip, $checksums, $sourceArchive, $manifest,
+            '--repo', $env:GITHUB_REPOSITORY,
+            '--verify-tag',
+            '--generate-notes',
+            '--title', "HyperKeyX $env:RELEASE_VERSION"
+          )
+
+          if ($env:IS_PRERELEASE -eq 'true') {
+            $releaseArguments += '--prerelease'
+            $releaseArguments += '--latest=false'
+          }
+          else {
+            $releaseArguments += '--latest'
+          }
+
+          & gh @releaseArguments
+          if ($LASTEXITCODE -ne 0) {
+            throw "GitHub Release 创建失败，退出代码：$LASTEXITCODE。"
+          }

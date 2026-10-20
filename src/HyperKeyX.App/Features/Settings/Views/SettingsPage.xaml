@@ -1,0 +1,64 @@
+<Page
+    x:Name="TypographyRoot"
+    x:Class="HyperKeyX.Features.Settings.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:motion="using:HyperKeyX.Shell.Appearance">
+
+    <Grid x:Name="SettingsPageLayout"
+          Padding="{x:Bind ViewModel.UiScaleMetrics.StandardPageMargin, Mode=OneWay}"
+          HorizontalAlignment="Stretch"
+          RowDefinitions="Auto,Auto,Auto,*"
+          RowSpacing="{x:Bind ViewModel.UiScaleMetrics.SectionSpacing, Mode=OneWay}">
+        <TextBlock Grid.Row="0"
+                   Text="{x:Bind ViewModel.ActiveSettingsTitleText, Mode=OneWay}"
+                   FontSize="{x:Bind ViewModel.UiScaleMetrics.LargeTitleFontSize, Mode=OneWay}"
+                   FontWeight="Normal"
+                   TextWrapping="Wrap"/>
+
+        <InfoBar Grid.Row="1"
+                 IsOpen="{x:Bind ViewModel.IsErrorOpen, Mode=TwoWay}"
+                 Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                 Severity="Error"
+                 IsClosable="True"/>
+
+        <SelectorBar x:Name="SettingsCategorySelector"
+                     Grid.Row="2"
+                     HorizontalAlignment="Left"
+                     SelectionChanged="OnCategorySelectionChanged"/>
+
+        <!-- 标题与分类栏保持固定，仅让设置列表在内容不足时滚动。 -->
+        <ScrollViewer Grid.Row="3"
+                      HorizontalScrollBarVisibility="Disabled"
+                      HorizontalScrollMode="Disabled"
+                      HorizontalContentAlignment="Stretch"
+                      VerticalScrollBarVisibility="Auto"
+                      VerticalScrollMode="Enabled"
+                      ZoomMode="Disabled">
+            <Grid x:Name="CategoryContentHost" Grid.Row="3"
+                  motion:ContentMotion.Context="{x:Bind ViewModel.SelectedCategory, Mode=OneWay}"
+                  Margin="0,4,0,0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top">
+                <ContentControl x:Name="GeneralSettingsHost"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                Visibility="{x:Bind ViewModel.IsGeneralCategoryActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                <ContentControl x:Name="AppearanceSettingsHost"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                Visibility="{x:Bind ViewModel.IsAppearanceCategoryActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+                <ContentControl x:Name="AboutSettingsHost"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                Visibility="{x:Bind ViewModel.IsAboutCategoryActive, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

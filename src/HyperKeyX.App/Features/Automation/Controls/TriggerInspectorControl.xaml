@@ -1,0 +1,227 @@
+<UserControl
+    x:Name="TypographyRoot"
+    x:Class="HyperKeyX.Features.Automation.Controls.TriggerInspectorControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:motion="using:HyperKeyX.Shell.Appearance">
+
+    <!-- 检查器尺寸由页面宿主分配，内容超高时仅滚动自身。 -->
+    <Border x:Name="TriggerSettingsPanel"
+            Grid.Column="1"
+            Padding="16"
+            BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="1"
+            CornerRadius="4">
+        <Grid RowDefinitions="*,Auto" RowSpacing="10">
+        <ScrollViewer x:Name="TriggerSettingsScrollViewer"
+                      Padding="0,0,12,0"
+                      HorizontalScrollBarVisibility="Disabled"
+                      HorizontalScrollMode="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      VerticalScrollMode="Enabled"
+                      ZoomMode="Disabled">
+            <StackPanel Spacing="10">
+                <StackPanel Spacing="5">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                        <TextBlock Grid.Column="0"
+                                   Text="{x:Bind ViewModel.SelectedTriggerConfigText, Mode=OneWay}"
+                                   FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.SectionFontSize, Mode=OneWay}"
+                                   FontWeight="Normal"/>
+                        <TextBlock Grid.Column="1"
+                                   Text="{x:Bind ViewModel.UnsavedText, Mode=OneWay}"
+                                   Visibility="{x:Bind ViewModel.SelectedTriggerConfig.IsDirty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                                   FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.SmallCaptionFontSize, Mode=OneWay}"
+                                   Foreground="DodgerBlue"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedTriggerConfig.TriggerDisplayName, Mode=OneWay}"
+                               FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                               Opacity="0.8"/>
+                </StackPanel>
+
+                <ContentControl x:Name="TriggerConfigurationFields"
+                                motion:ContentMotion.Context="{x:Bind ViewModel.SelectedTriggerConfig, Mode=OneWay}"
+                                IsEnabled="{x:Bind ViewModel.CanEditTriggerConfiguration, Mode=OneWay}"
+                                HorizontalContentAlignment="Stretch">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="{x:Bind ViewModel.TurboText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                       FontWeight="Normal"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="0"
+                                           Text="{x:Bind ViewModel.EnableSelectedTurboText, Mode=OneWay}"
+                                           VerticalAlignment="Center"/>
+                                <ToggleSwitch Height="{x:Bind ViewModel.Settings.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1"
+                                              OnContent="{x:Bind ViewModel.Settings.ToggleOnText, Mode=OneWay}"
+                                              OffContent="{x:Bind ViewModel.Settings.ToggleOffText, Mode=OneWay}"
+                                              IsOn="{x:Bind ViewModel.SelectedTriggerConfig.IsTurboEnabled, Mode=TwoWay}"
+                                              AutomationProperties.Name="{x:Bind ViewModel.EnableSelectedTurboText, Mode=OneWay}"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{x:Bind ViewModel.KeyDownDurationText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.CompactBodyFontSize, Mode=OneWay}"/>
+                            <!-- Inline NumberBox 预留稳定宽度，避免文本与步进按钮重叠。 -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <Slider Grid.Column="0"
+                                        Minimum="10"
+                                        Maximum="1000"
+                                        StepFrequency="10"
+                                        Value="{x:Bind ViewModel.SelectedTriggerConfig.KeyDownDuration, Mode=TwoWay}"
+                                        VerticalAlignment="Center"/>
+                                <NumberBox FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1"
+                                           Minimum="10"
+                                           Maximum="1000"
+                                           SmallChange="10"
+                                           LargeChange="50"
+                                           SpinButtonPlacementMode="Inline"
+                                           MinWidth="{x:Bind ViewModel.Settings.UiScaleMetrics.DurationInputMinWidth, Mode=OneWay}"
+                                           Value="{x:Bind ViewModel.SelectedTriggerConfig.KeyDownDuration, Mode=TwoWay}"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{x:Bind ViewModel.KeyUpDurationText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.CompactBodyFontSize, Mode=OneWay}"/>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <Slider Grid.Column="0"
+                                        Minimum="10"
+                                        Maximum="1000"
+                                        StepFrequency="10"
+                                        Value="{x:Bind ViewModel.SelectedTriggerConfig.KeyUpDuration, Mode=TwoWay}"
+                                        VerticalAlignment="Center"/>
+                                <NumberBox FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1"
+                                           Minimum="10"
+                                           Maximum="1000"
+                                           SmallChange="10"
+                                           LargeChange="50"
+                                           SpinButtonPlacementMode="Inline"
+                                           MinWidth="{x:Bind ViewModel.Settings.UiScaleMetrics.DurationInputMinWidth, Mode=OneWay}"
+                                           Value="{x:Bind ViewModel.SelectedTriggerConfig.KeyUpDuration, Mode=TwoWay}"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{x:Bind ViewModel.LongPressThresholdText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.CompactBodyFontSize, Mode=OneWay}"/>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <Slider Grid.Column="0"
+                                        Minimum="250"
+                                        Maximum="2000"
+                                        StepFrequency="50"
+                                        Value="{x:Bind ViewModel.SelectedTriggerConfig.LongPressThresholdMs, Mode=TwoWay}"
+                                        VerticalAlignment="Center"/>
+                                <NumberBox FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1"
+                                           Minimum="250"
+                                           Maximum="2000"
+                                           SmallChange="50"
+                                           LargeChange="250"
+                                           SpinButtonPlacementMode="Inline"
+                                           MinWidth="{x:Bind ViewModel.Settings.UiScaleMetrics.DurationInputMinWidth, Mode=OneWay}"
+                                           Value="{x:Bind ViewModel.SelectedTriggerConfig.LongPressThresholdMs, Mode=TwoWay}"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{x:Bind ViewModel.TriggerModeText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.CompactBodyFontSize, Mode=OneWay}"/>
+                            <ComboBox FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" ItemsSource="{x:Bind ViewModel.TriggerModes, Mode=OneWay}"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedTriggerIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Text="{x:Bind ViewModel.PassThroughOriginalInputText, Mode=OneWay}"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock Text="{x:Bind ViewModel.SelectedPassThroughDescriptionText, Mode=OneWay}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.SmallCaptionFontSize, Mode=OneWay}"
+                                           Opacity="0.65"/>
+                            </StackPanel>
+                            <ToggleSwitch Height="{x:Bind ViewModel.Settings.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1"
+                                              OnContent="{x:Bind ViewModel.Settings.ToggleOnText, Mode=OneWay}"
+                                              OffContent="{x:Bind ViewModel.Settings.ToggleOffText, Mode=OneWay}"
+                                          IsOn="{x:Bind ViewModel.SelectedTriggerConfig.PassThroughOriginalInput, Mode=TwoWay}"
+                                          AutomationProperties.Name="{x:Bind ViewModel.PassThroughOriginalInputText, Mode=OneWay}"
+                                          ToolTipService.ToolTip="{x:Bind ViewModel.SelectedPassThroughDescriptionText, Mode=OneWay}"/>
+                        </Grid>
+
+                        <Border Height="1"
+                                Background="{ThemeResource SystemControlForegroundBaseLowBrush}"/>
+
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="{x:Bind ViewModel.MacroText, Mode=OneWay}"
+                                       FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}"
+                                       FontWeight="Normal"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="0"
+                                           Text="{x:Bind ViewModel.EnableMacroText, Mode=OneWay}"
+                                           VerticalAlignment="Center"/>
+                                <ToggleSwitch Height="{x:Bind ViewModel.Settings.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}" FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1"
+                                              OnContent="{x:Bind ViewModel.Settings.ToggleOnText, Mode=OneWay}"
+                                              OffContent="{x:Bind ViewModel.Settings.ToggleOffText, Mode=OneWay}"
+                                              IsOn="{x:Bind ViewModel.SelectedTriggerConfig.IsMacroEnabled, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.SelectedTriggerConfig.CanToggleMacro, Mode=OneWay}"
+                                              AutomationProperties.Name="{x:Bind ViewModel.EnableMacroText, Mode=OneWay}"/>
+                            </Grid>
+                            <ComboBox FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" x:Name="SavedMacroSelector"
+                                      ItemsSource="{x:Bind ViewModel.SelectedTriggerConfig.PublishedMacroChoices, Mode=OneWay}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="MacroId"
+                                      SelectedValue="{x:Bind ViewModel.SelectedTriggerConfig.SelectedMacroId, Mode=TwoWay}"
+                                      PlaceholderText="{x:Bind ViewModel.SelectMacroText, Mode=OneWay}"
+                                      HorizontalAlignment="Stretch"
+                                      AutomationProperties.Name="{x:Bind ViewModel.SelectMacroText, Mode=OneWay}"/>
+                            <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="6">
+                                <Button FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="2" HorizontalAlignment="Right"
+                                        Content="{x:Bind ViewModel.ClearMacroBindingText, Mode=OneWay}"
+                                        IsEnabled="{x:Bind ViewModel.SelectedTriggerConfig.HasMacroSelection, Mode=OneWay}"
+                                        Click="OnClearMacroBinding"/>
+                                <Button FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="0"
+                                        Width="{x:Bind ViewModel.Settings.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}"
+                                        Height="{x:Bind ViewModel.Settings.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}"
+                                        Style="{StaticResource CompactIconButtonStyle}"
+                                        Command="{x:Bind ViewModel.OpenSelectedTriggerMacroCommand}"
+                                        IsEnabled="{x:Bind ViewModel.SelectedTriggerConfig.HasValidMacroSelection, Mode=OneWay}"
+                                        AutomationProperties.Name="{x:Bind ViewModel.OpenMacroText, Mode=OneWay}"
+                                        ToolTipService.ToolTip="{x:Bind ViewModel.OpenMacroText, Mode=OneWay}">
+                                    <FontIcon Glyph="&#xE8A7;"
+                                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.SectionFontSize, Mode=OneWay}"
+                                              Style="{StaticResource CommandFontIconStyle}"/>
+                                </Button>
+                                <Button FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Column="1"
+                                        Width="{x:Bind ViewModel.Settings.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}"
+                                        Height="{x:Bind ViewModel.Settings.UiScaleMetrics.StandardIconButtonSize, Mode=OneWay}"
+                                        Style="{StaticResource CompactIconButtonStyle}"
+                                        Command="{x:Bind ViewModel.CopySelectedTriggerMacroCommand}"
+                                        IsEnabled="{x:Bind ViewModel.SelectedTriggerConfig.HasValidMacroSelection, Mode=OneWay}"
+                                        AutomationProperties.Name="{x:Bind ViewModel.CopyMacroText, Mode=OneWay}"
+                                        ToolTipService.ToolTip="{x:Bind ViewModel.CopyMacroText, Mode=OneWay}">
+                                    <FontIcon Glyph="&#xE8C8;"
+                                              FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.SectionFontSize, Mode=OneWay}"
+                                              Style="{StaticResource CommandFontIconStyle}"/>
+                                </Button>
+                            </Grid>
+                            <InfoBar IsOpen="{x:Bind ViewModel.SelectedTriggerConfig.HasMissingEnabledMacro, Mode=OneWay}"
+                                     Severity="Error"
+                                     Message="{x:Bind ViewModel.MissingMacroReferenceText, Mode=OneWay}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ContentControl>
+
+
+            </StackPanel>
+        </ScrollViewer>
+                <Button FontSize="{x:Bind ViewModel.Settings.UiScaleMetrics.BodyFontSize, Mode=OneWay}" Grid.Row="1" x:Name="SaveConfigButton"
+                        Content="{x:Bind ViewModel.SaveTriggerText, Mode=OneWay}"
+                        Click="OnSaveConfig"
+                        IsEnabled="{x:Bind ViewModel.CanSaveSelectedTriggerConfig, Mode=OneWay}"
+                        HorizontalAlignment="Stretch"
+                        Style="{ThemeResource AccentButtonStyle}"
+                        Margin="0,4,0,0"/>
+        </Grid>
+    </Border>
+</UserControl>

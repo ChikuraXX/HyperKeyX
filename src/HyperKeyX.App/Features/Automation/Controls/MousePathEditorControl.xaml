@@ -1,0 +1,83 @@
+<UserControl
+ x:Class="HyperKeyX.Features.Automation.Controls.MousePathEditorControl"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:vm="using:HyperKeyX.Features.Automation.ViewModels">
+ <ScrollViewer MaxHeight="720" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+ <StackPanel x:Name="Details" Spacing="10" Padding="0,0,12,8">
+  <ComboBox Header="{Binding ModeLabel}" ItemsSource="{Binding ModeOptions}" SelectedIndex="{Binding ModeIndex, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+  <ComboBox Header="{Binding CoordinateLabel}" ItemsSource="{Binding CoordinateOptions}" SelectedIndex="{Binding CoordinateModeIndex, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+  <TextBlock Text="{Binding CoordinateHelp}" TextWrapping="Wrap"/>
+  <TextBlock Text="{Binding RelativeHelp}" TextWrapping="Wrap" Opacity="0.7"/>
+  <ComboBox Header="{Binding TimingLabel}" ItemsSource="{Binding TimingOptions}" SelectedIndex="{Binding TimingModeIndex, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+  <NumberBox Header="{Binding FixedDurationMsLabel}" Value="{Binding FixedDurationMs, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding SpeedLabel}" Value="{Binding Speed, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding MaxSpeedLabel}" Value="{Binding MaxSpeed, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding MaxAccelerationLabel}" Value="{Binding MaxAcceleration, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+  <Expander Header="{Binding ProcessingText}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"><StackPanel Spacing="8">
+   <NumberBox Header="{Binding SamplingMsLabel}" Value="{Binding SamplingMs, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding MovementThresholdLabel}" Value="{Binding MovementThreshold, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding StillnessMsLabel}" Value="{Binding StillnessMs, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<CheckBox Content="{Binding SmoothingEnabledLabel}" IsChecked="{Binding SmoothingEnabled, Mode=TwoWay}"/>
+<NumberBox Header="{Binding SmoothingDeviationLabel}" Value="{Binding SmoothingDeviation, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<CheckBox Content="{Binding SimplificationEnabledLabel}" IsChecked="{Binding SimplificationEnabled, Mode=TwoWay}"/>
+<NumberBox Header="{Binding SimplificationDeviationLabel}" Value="{Binding SimplificationDeviation, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding SimplificationTimeMsLabel}" Value="{Binding SimplificationTimeMs, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+  </StackPanel></Expander>
+  <Expander Header="{Binding RandomText}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"><StackPanel Spacing="8">
+   <CheckBox Content="{Binding TranslationEnabledLabel}" IsChecked="{Binding TranslationEnabled, Mode=TwoWay}"/>
+<NumberBox Header="{Binding TranslationXLabel}" Value="{Binding TranslationX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding TranslationYLabel}" Value="{Binding TranslationY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<CheckBox Content="{Binding JitterEnabledLabel}" IsChecked="{Binding JitterEnabled, Mode=TwoWay}"/>
+<NumberBox Header="{Binding JitterAmplitudeLabel}" Value="{Binding JitterAmplitude, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<NumberBox Header="{Binding JitterCorrelationLabel}" Value="{Binding JitterCorrelation, Mode=TwoWay}" SpinButtonPlacementMode="Compact" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+   <TextBlock Text="{Binding TranslationHelp}" TextWrapping="Wrap"/>
+   <TextBlock Text="{Binding RandomPreviewHelp}" TextWrapping="Wrap"/>
+  </StackPanel></Expander>
+  <Expander Header="{Binding TargetsText}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"><StackPanel Spacing="8">
+   <ComboBox ItemsSource="{Binding TargetChoices}" DisplayMemberPath="Name" SelectedIndex="{Binding SelectedTargetIndex, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+   <Button Content="{Binding AddTargetText}" Click="OnAddTarget"/>
+   <Button Content="{Binding RemoveTargetText}" Click="OnRemoveTarget"/>
+   <StackPanel DataContext="{Binding TargetEditor}" Spacing="8">
+    <TextBox Header="{Binding NameLabel}" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<TextBox Header="{Binding ProcessNameLabel}" Text="{Binding ProcessName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<TextBox Header="{Binding ExecutablePathLabel}" Text="{Binding ExecutablePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<TextBox Header="{Binding WindowClassLabel}" Text="{Binding WindowClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+<TextBox Header="{Binding TitleLabel}" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+    <ComboBox Header="{Binding TitleMatchLabel}" ItemsSource="{Binding TitleMatchOptions}" SelectedIndex="{Binding TitleMatchIndex, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+    <CheckBox Content="{Binding DistinctLabel}" IsChecked="{Binding RequireDistinctWindow, Mode=TwoWay}"/>
+    <TextBlock Text="{Binding MatchHelp}" TextWrapping="Wrap"/>
+   </StackPanel>
+  </StackPanel></Expander>
+  <Expander Header="{Binding PointsText}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"><StackPanel Spacing="8">
+   <ListView x:Name="PointList" ItemsSource="{Binding Points}" SelectedItem="{Binding SelectedPoint, Mode=TwoWay}" MaxHeight="240">
+    <ListView.ItemsPanel><ItemsPanelTemplate><ItemsStackPanel/></ItemsPanelTemplate></ListView.ItemsPanel>
+    <ListView.ItemTemplate><DataTemplate x:DataType="vm:PathPointRow"><TextBlock Text="{x:Bind Label}" TextTrimming="CharacterEllipsis"/></DataTemplate></ListView.ItemTemplate>
+   </ListView>
+   <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="4">
+    <Button Content="{Binding PreviousText}" IsEnabled="{Binding HasPreviousPage}" Click="OnPrevious"/>
+    <TextBlock Grid.Column="1" Text="{Binding PageText}" VerticalAlignment="Center"/>
+    <Button Grid.Column="2" Content="{Binding NextText}" IsEnabled="{Binding HasNextPage}" Click="OnNext" HorizontalAlignment="Right"/>
+   </Grid>
+   <NumberBox Header="X" Value="{Binding PointX, Mode=TwoWay}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+   <NumberBox Header="Y" Value="{Binding PointY, Mode=TwoWay}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+   <NumberBox Header="{Binding PointTimeLabel}" Value="{Binding PointTimeMs, Mode=TwoWay}" IsEnabled="{Binding CanEditPointTime}" GotFocus="OnEditStarted" LostFocus="OnEditCompleted" KeyDown="OnEditKeyDown"/>
+   <Button Content="{Binding AddPointText}" IsEnabled="{Binding CanAddPoint}" Click="OnAddPoint"/>
+   <Button Content="{Binding DeletePointText}" IsEnabled="{Binding CanDeletePoint}" Click="OnDeletePoint"/>
+   <Button Content="{Binding RestoreSourceText}" Click="OnRestoreSource"/>
+   <TextBlock Text="{Binding ProtectedPointText}" TextWrapping="Wrap"/>
+  </StackPanel></Expander>
+  <TextBlock Text="{Binding PreviewText}" FontWeight="Normal"/>
+  <TextBlock Text="{Binding PreviewLegendText}" TextWrapping="Wrap"/>
+  <Border BorderThickness="1" BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" Height="180">
+   <Canvas x:Name="PreviewCanvas" SizeChanged="OnPreviewSizeChanged" IsHitTestVisible="False"/>
+  </Border>
+  <TextBlock Text="{Binding DurationText}" TextWrapping="Wrap"/>
+  <TextBlock Text="{Binding EntryDurationText}" TextWrapping="Wrap"/>
+  <TextBlock Text="{Binding PreviewHelp}" TextWrapping="Wrap" Opacity="0.7"/>
+  <TextBlock Text="{Binding RuntimeReadinessText}" TextWrapping="Wrap"/>
+  <TextBlock Text="{Binding ValidationText}" TextWrapping="Wrap" Foreground="{ThemeResource SystemFillColorCriticalBrush}" AutomationProperties.LiveSetting="Polite"/>
+  <Button Content="{Binding LocateErrorText}" IsEnabled="{Binding HasValidationErrors}" Click="OnLocateIssue"/>
+ </StackPanel>
+ </ScrollViewer>
+</UserControl>

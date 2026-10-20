@@ -1,0 +1,49 @@
+<ContentDialog
+    x:Class="HyperKeyX.Features.Automation.Dialogs.KeyboardKeyPickerDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:HyperKeyX.Features.Automation.ViewModels"
+    Title="{x:Bind ViewModel.TitleText, Mode=OneWay}"
+    PrimaryButtonText="{x:Bind ViewModel.ConfirmText, Mode=OneWay}"
+    CloseButtonText="{x:Bind ViewModel.CancelText, Mode=OneWay}"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.CanConfirm, Mode=OneWay}">
+    <ContentDialog.Resources>
+        <CollectionViewSource x:Name="GroupedKeys"
+                              IsSourceGrouped="True"
+                              ItemsPath="Items"/>
+    </ContentDialog.Resources>
+
+    <Grid RowDefinitions="Auto,*"
+          RowSpacing="12"
+          Width="520"
+          MinHeight="460">
+        <AutoSuggestBox Grid.Row="0"
+                        Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="{x:Bind ViewModel.SearchPlaceholderText, Mode=OneWay}"
+                        AutomationProperties.Name="{x:Bind ViewModel.SearchPlaceholderText, Mode=OneWay}"
+                        QueryIcon="Find"/>
+
+        <ListView Grid.Row="1"
+                  ItemsSource="{Binding Source={StaticResource GroupedKeys}}"
+                  SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+                  IsItemClickEnabled="True"
+                  ItemClick="OnItemClick">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="vm:KeyboardKeyPickerItemViewModel">
+                    <TextBlock Text="{x:Bind DisplayName}"
+                               AutomationProperties.Name="{x:Bind DisplayName}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate x:DataType="vm:KeyboardKeyPickerGroupViewModel">
+                            <TextBlock Text="{x:Bind DisplayName}"
+                                       FontWeight="Normal"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+        </ListView>
+    </Grid>
+</ContentDialog>
