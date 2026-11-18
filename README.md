@@ -90,4 +90,4 @@ Prepare a source-only upload locally with `./scripts/Export-PublishSource.ps1 -O
 
 ## License
 
-[GNU LGPL v3.0 only](LICENSE) (`LGPL-3.0-only`). Commercial use is allowed under the license terms. Third-party components retain their respective licenses. The full terms are included in [LICENSE](LICENSE) and [COPYING](COPYING). See also the [third-party notices](ThirdPartyNotices/CommunityToolkit.Windows.MIT.txt).
+[GNU LGPL v3.0 only](LICENSE) (`LGPL-3.0-only`). Commercial use is allowed under the license terms. Third-party components retain their respective licenses. The full terms are included in [LICENSE](LICENSE) and [GPL base terms](docs/licenses/GPL-3.0.txt). See also the [third-party notices](ThirdPartyNotices/CommunityToolkit.Windows.MIT.txt).

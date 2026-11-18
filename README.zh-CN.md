@@ -90,4 +90,4 @@ dotnet build src/HyperKeyX.App/HyperKeyX.App.csproj -c Release -p:Platform=x64
 
 ## 许可证
 
-采用 [GNU LGPL v3.0 only](LICENSE)（`LGPL-3.0-only`），允许遵循协议的商业使用。第三方组件保留各自许可。完整条款见 [LICENSE](LICENSE) 和 [COPYING](COPYING)，以及 [第三方许可声明](ThirdPartyNotices/CommunityToolkit.Windows.MIT.txt)。
+采用 [GNU LGPL v3.0 only](LICENSE)（`LGPL-3.0-only`），允许遵循协议的商业使用。第三方组件保留各自许可。完整条款见 [LICENSE](LICENSE) 和 [GPL 基础条款](docs/licenses/GPL-3.0.txt)，以及 [第三方许可声明](ThirdPartyNotices/CommunityToolkit.Windows.MIT.txt)。

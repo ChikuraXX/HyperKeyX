@@ -25,8 +25,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\..\LICENSE;..\..\COPYING"
+    <Content Include="..\..\LICENSE"
              Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\licenses\GPL-3.0.txt"
+             Link="COPYING" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\ThirdPartyNotices\CommunityToolkit.Windows.MIT.txt"
              Link="ThirdPartyNotices\CommunityToolkit.Windows.MIT.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Update="Assets\Brand\*.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />

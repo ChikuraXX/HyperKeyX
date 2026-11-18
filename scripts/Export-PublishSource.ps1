@@ -47,7 +47,7 @@ $requiredFiles = @(
     'README.md'
     'README.zh-CN.md'
     'LICENSE'
-    'COPYING'
+    'docs/licenses/GPL-3.0.txt'
     'scripts/Build-Zip.ps1'
     'scripts/Export-PublishSource.ps1'
 )
