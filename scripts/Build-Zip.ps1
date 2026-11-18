@@ -124,7 +124,6 @@ $requiredPublishPaths = @(
     'HyperKeyX.Infrastructure.dll',
     'LICENSE',
     'COPYING',
-    'COPYING.LESSER',
     'Assets\Brand\HyperKeyX.ico',
     'ThirdPartyNotices\CommunityToolkit.Windows.MIT.txt'
 )

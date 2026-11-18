@@ -48,7 +48,6 @@ $requiredFiles = @(
     'README.zh-CN.md'
     'LICENSE'
     'COPYING'
-    'COPYING.LESSER'
     'scripts/Build-Zip.ps1'
     'scripts/Export-PublishSource.ps1'
 )
